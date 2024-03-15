@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+sqlalchemy
+passlib
+passlib[bcrypt]
+bcrypt
+python-jose
+python-jose[cryptography]
+python-multipart
+pymysql
+PyMySQL[rsa]
+PyMySQL[ed25519]
+cryptography
+mariadb
+redis
