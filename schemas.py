@@ -23,11 +23,11 @@ class OwnerUpdateBase(BaseModel):
 
 
 class UserSignUpBase(BaseModel):
-    phonenumber:str
-    password:str
+    phonenumber: str
 
 class VerifyphoneBase(BaseModel):
     phonenumber: str
+    password:str
     code: str
 class CustomerCompeleteSignUpBase(BaseModel):
     email: str

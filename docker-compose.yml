@@ -1,21 +1,55 @@
-version: '3.3'
+version: '3.7'
 
 services:
+  traefik:
+    image: "traefik:v3.0"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.myapi.address=:20000"
+      - "--entryPoints.db.address=:8888"
+    ports:
+      - "80:80"
+      - "20000:20000"
+      - "8888:8888"
+      - "8088:8080"
+      - "433:433"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  whoami:
+    image: "traefik/whoami"
+    container_name: "simple-service"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`localhost`)"
+      - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
+
+
+
   db:
     image: mariadb:10.6
     restart: always
     ports:
-      - 3306:3306
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: 66405206
+      MYSQL_DB: astronic
+    hostname: db
 
   phpmyadmin:
     image: phpmyadmin
     restart: always
-    ports:
-      - 8080:80
     environment:
       - PMA_ARBITRARY=1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`localhost`)"
+      - "traefik.http.routers.phpmyadmin.entrypoints=db"
   redis:
     image: redis:latest
     restart: always
@@ -25,6 +59,22 @@ services:
       - /path/to/local/dаta:/root/redis
       - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
     environment:
-      - REDIS_PASSWORD=66405206
+#      - REDIS_PASSWORD=66405206
       - REDIS_PORT=6379
       - REDIS_DATABASES=16
+    hostname: redis
+  api_service:
+    build: ./
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./:/app/
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8000:8000"
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.api_service.rule=Host(`localhost`)"
+#      - "traefik.http.routers.api_service.rule=PathPrefix(`/myapi`)"
+#      - "traefik.http.routers.api_service.entrypoints=myapi"

@@ -45,33 +45,9 @@ def customer_sign_up(userbase: UserSignUpBase,response: Response):
             "message": "شماره همراه نا معتبر است"
         }
 
-    valid_pass = is_valid_password(userbase.password)
-
-    if not valid_pass['valid']:
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return {
-            "message": valid_pass['message']
-        }
 
 
 
-
-    user = User(
-        # username=customerbase.username,
-        phonenumber=userbase.phonenumber,
-        password=Hash.bcrypt(userbase.password),
-        # email=None,
-        # firstname="",
-        # lastname="",
-        # nationalcode="",
-        # cardnumber="",
-        # isowner=False
-
-
-    )
-    session.add(user)
-    session.commit()
-    session.refresh(user)
 
     # access_token = oauth2.create_access_token(data={'sub': user.phonenumber})
     rnd = random.randint(1000, 9999)
@@ -91,7 +67,7 @@ def customer_sign_up(userbase: UserSignUpBase,response: Response):
 
 
 @router.post('/verify')
-def customer_sign_up(verifybase: VerifyphoneBase,response: Response):
+def customer_sign_up(verifybase: VerifyphoneBase, response: Response):
 
     code = rds.get(verifybase.phonenumber)
     # print(int(code))
@@ -107,6 +83,31 @@ def customer_sign_up(verifybase: VerifyphoneBase,response: Response):
         return {
             "message": "کد نا معتبر"
         }
+
+    valid_pass = is_valid_password(verifybase.password)
+
+    if not valid_pass['valid']:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {
+            "message": valid_pass['message']
+        }
+
+    user = User(
+        # username=customerbase.username,
+        phonenumber=verifybase.phonenumber,
+        password=Hash.bcrypt(verifybase.password)
+        # email=None,
+        # firstname="",
+        # lastname="",
+        # nationalcode="",
+        # cardnumber="",
+        # isowner=False
+
+
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
 
     user = session.query(User).filter(User.phonenumber == verifybase.phonenumber).first()
 
@@ -140,19 +141,21 @@ def customer_login(userbase: UserLoginBase, response: Response):
         }
 
     # access_token = oauth2.create_access_token(data={'sub': user.phonenumber})
-    rnd = random.randint(1000, 9999)
-    rds.setex(userbase.phonenumber, 180, rnd)
-    print(rnd)
+    # rnd = random.randint(1000, 9999)
+    # rds.setex(userbase.phonenumber, 180, rnd)
+    # print(rnd)
+
+    access_token = oauth2.create_access_token(data={'sub': user.phonenumber})
 
     return {
-        # 'access_token': access_token,
-        # 'type_token': 'bearer',
-        # 'userID': customer.cid,
-        # 'phonenumber': customer.phonenumber,
+        'access_token': access_token,
+        'type_token': 'bearer',
+        'userID': user.uid,
+        'phonenumber': user.phonenumber,
         "ok": True,
-        "verify_code": rnd,
+        # "verify_code": rnd,
         "message": "این مرحله انجام شد. کد تایید را وارد کنید"
-        # 'customer': customer
+
     }
 
 
