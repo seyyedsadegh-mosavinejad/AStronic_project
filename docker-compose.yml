@@ -16,26 +16,26 @@ services:
       - "80:80"
       - "20000:20000"
       - "8888:8888"
-      - "8088:8080"
+      - "10088:8080"
       - "433:433"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-  whoami:
-    image: "traefik/whoami"
-    container_name: "simple-service"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`localhost`)"
-      - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
-      - "traefik.http.routers.whoami.entrypoints=web"
-
+#  whoami:
+#    image: "traefik/whoami"
+#    container_name: "simple-service"
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.whoami.rule=Host(`localhost`)"
+#      - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
+#      - "traefik.http.routers.whoami.entrypoints=web"
+#
 
 
   db:
     image: mariadb:10.6
     restart: always
     ports:
-      - "3306:3306"
+      - "33060:3306"
     environment:
       MYSQL_ROOT_PASSWORD: 66405206
       MYSQL_DB: astronic
@@ -54,7 +54,7 @@ services:
     image: redis:latest
     restart: always
     ports:
-      - "6379:6379"
+      - "63790:6379"
     volumes:
       - /path/to/local/dаta:/root/redis
       - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
@@ -63,18 +63,38 @@ services:
       - REDIS_PORT=6379
       - REDIS_DATABASES=16
     hostname: redis
-  api_service:
-    build: ./
-    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-    volumes:
-      - ./:/app/
-    depends_on:
-      - db
-      - redis
-    ports:
-      - "8000:8000"
+#  api_service:
+#    build: ./
+#    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+#    volumes:
+#      - ./:/app/
+#    depends_on:
+#      - db
+#      - redis
+#    ports:
+#      - "10000:8000"
 #    labels:
 #      - "traefik.enable=true"
 #      - "traefik.http.routers.api_service.rule=Host(`localhost`)"
 #      - "traefik.http.routers.api_service.rule=PathPrefix(`/myapi`)"
 #      - "traefik.http.routers.api_service.entrypoints=myapi"
+
+#  mymongo:
+#    image: mongodb/mongodb-community-server:6.0-ubi8
+#    environment:
+#      - CONN_STR=mongodb://root:66405206@mongodb
+#    command: '/bin/bash -c "sleep 5; mongosh $CONN_STR --eval "'
+#    depends_on:
+#      - mongodb
+
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=root
+      - MONGODB_INITDB_ROOT_PASSWORD=66405206
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data/db
+    ports:
+      - "27017:27017"

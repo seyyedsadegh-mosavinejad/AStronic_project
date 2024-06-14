@@ -1,0 +1,28 @@
+db.products.find({})
+db.products.find()
+db.products.insert({name:'a55',memory:8})
+show collections
+db.createCollection('products')
+show collections
+db.products.drop()
+show collections
+show dbs
+db.createCollection('products')
+db.createCollection()
+db.createCollection
+db
+use astronic
+show dbs
+db.dropDatabase()
+bd.dropDatabase()
+use astronic
+show dbs
+use admin
+use db
+use admin'
+db
+bd
+use astronic
+show dbs
+login
+show dbs

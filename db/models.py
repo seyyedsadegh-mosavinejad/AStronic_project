@@ -27,36 +27,33 @@ class User(base):
     # addresses = relationship('Address', backref='owner')
     # rents = relationship('Rent', backref='renter')
 
-# class Owner(base):
-#   __tablename__ = "owners"
-#   oid = Column('oid' , Integer,unique=True,primary_key=True)
-#   username = Column('username', String(50),unique=True,nullable=True)
-#   email = Column('email', String(150),unique=True,nullable=True)
-#   password = Column('pass', String(128))
-#   firstname = Column('firstname', String(255))
-#   lastname = Column('lastname', String(255))
-#   phonenumber = Column('phonenumber', String(11),unique=True)
-#   nationalcode = Column('nationalcode', String(10),unique=True)
-#   cardnumber = Column('cardnumber', String(16))
-#   products = relationship('Product',backref='owner')
 
+
+class Product(base):
+  __tablename__ = "products"
+  pid = Column('pid' , Integer,primary_key=True)
+  title = Column('title', String(255))
+  model = Column('model', String(255))
+  price = Column('price', BigInteger,default=0)
+  description = Column('description', Text)
+  categoryid = Column('categoryid', Integer)
 
 
 #
-#
-# class Address(base):
-#   __tablename__ = "addresses"
-#   addressid = Column('addressid' , Integer,unique=True,primary_key=True)
-#   ostan = Column('ostan', String(100))
-#   shahr = Column('shahr', String(100))
-#   street = Column('street', String(100))
-#   pelak = Column('pelak', String(10))
-#   addresskamel = Column('addresskamel', Text)
-#   postcode = Column('postcode', String(20))
-#   location = Column('location', Text)
-#   oid = Column('oid', Integer, ForeignKey('customers.cid'))
-#
-#
+
+class Address(base):
+  __tablename__ = "addresses"
+  addressid = Column('addressid' , Integer,unique=True,primary_key=True)
+  ostan = Column('ostan', String(100))
+  shahr = Column('shahr', String(100))
+  pelak = Column('pelak', String(10))
+  address = Column('address', Text)
+  phone = Column('phone', String(20))
+  postalcode = Column('postalcode', String(20))
+  location = Column('location', Text)
+  uid = Column('uid', Integer, ForeignKey('users.uid'))
+
+
 #
 # class Customer(base):
 #   __tablename__ = "customers"

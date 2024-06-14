@@ -24,6 +24,17 @@ class OwnerUpdateBase(BaseModel):
 
 class UserSignUpBase(BaseModel):
     phonenumber: str
+class AddProductBase(BaseModel):
+    title: str
+    model: str
+    description: str
+    price: float
+    categoryid: int
+
+# class AddProductPictureBase(BaseModel):
+#     pid: int
+#     picture:
+
 
 class VerifyphoneBase(BaseModel):
     phonenumber: str
