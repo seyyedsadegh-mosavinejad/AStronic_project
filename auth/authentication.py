@@ -23,7 +23,7 @@ def get_token(request: OAuth2PasswordRequestForm = Depends()):
     return {
         'access_token': access_token,
         'type_token': 'bearer',
-        'userID': user.id,
+        'userID': user.uid,
         'phonenumber': user.phonenumber
 
     }

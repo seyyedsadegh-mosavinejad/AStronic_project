@@ -30,6 +30,9 @@ class AddProductBase(BaseModel):
     description: str
     price: float
     categoryid: int
+class AddToCart(BaseModel):
+    pid: int
+    tedad: int
 
 # class AddProductPictureBase(BaseModel):
 #     pid: int
@@ -62,10 +65,8 @@ class UserLoginBase(BaseModel):
 
 
 
-class CustomerAuth(BaseModel):
-    cid : int
-    username : str
-    email : str
+class UserAuth(BaseModel):
+    uid : int
     phonenumber : str
     class Config:
         from_attributes = True

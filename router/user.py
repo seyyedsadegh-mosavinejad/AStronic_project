@@ -5,10 +5,10 @@ from db.models import User
 from db.db_config import session
 from sqlalchemy.sql.expression import and_
 from auth import oauth2
-from schemas import UserSignUpBase, CustomerAuth, UserLoginBase, CustomerCompeleteSignUpBase, RentVilllaBase, VerifyphoneBase
+from schemas import UserSignUpBase, UserAuth, UserLoginBase, CustomerCompeleteSignUpBase, RentVilllaBase, VerifyphoneBase
 from functions.validation import *
 from typing import Annotated
-from auth.oauth2 import get_current_active_customer
+from auth.oauth2 import get_current_active_user
 from db.hash import Hash
 # from db.db_customer import get_customer_by_phone
 from datetime import date

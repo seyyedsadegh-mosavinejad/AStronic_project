@@ -8,7 +8,7 @@ from db.db_user import get_user_by_phone
 from sqlalchemy.orm import Session
 from jose import jwt
 from jose.exceptions import JWTError
-from schemas import CustomerAuth
+from schemas import UserAuth
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -31,22 +31,22 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 
 
-async def get_current_customer(token: Annotated[str, Depends(oauth2_scheme)]):
-    customer = _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
-    if not customer:
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    user = _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return customer
+    return user
 
 
-async def get_current_active_customer(
-    current_customer: Annotated[CustomerAuth, Depends(get_current_customer)]
+async def get_current_active_user(
+    current_user: Annotated[UserAuth, Depends(get_current_user)]
 ):
 
-    return current_customer
+    return current_user
 
 # def get_current_customer(token: str = Depends(oauth2_scheme)):
 #     error_credential = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
