@@ -37,6 +37,43 @@ class Product(base):
   price = Column('price', BigInteger,default=0)
   description = Column('description', Text)
   categoryid = Column('categoryid', Integer)
+  scid = Column('scid', Integer)
+
+class SubProduct(base):
+  __tablename__ = "subproduct"
+  spid = Column('spid' , Integer,primary_key=True)
+  pid = Column('pid' , Integer)
+  price = Column('price', BigInteger,default=0)
+  mojoodi = Column('mojoodi', Integer,default=0)
+  color = Column('color', String(20),default=0)
+  color_name = Column('colorname', String(30),default=0)
+
+class Sefaresh(base):
+  __tablename__ = "safaresh"
+  sid = Column('sid' , Integer,primary_key=True)
+  uid = Column('uid' , Integer)
+  addressid = Column('addressid' , Integer)
+  raveshErsalid = Column('raveshersalid' , Integer)
+  statusid = Column('statusid' , Integer)
+  date = Column('date' , Date)
+  mablaq = Column('mablaq' , String(20))
+
+class SefareshRow(base):
+  __tablename__ = "sefareshrow"
+  srid = Column('srid' , Integer,primary_key=True)
+  sid = Column('sid' , Integer)
+  pid = Column('pid' , Integer)
+  tedad = Column('tedad' , Integer)
+  price = Column('price' , Integer)
+  totalPrice = Column('total price' , Integer)
+
+class Cart(base):
+  __tablename__ = "cart"
+  cid = Column('cid' , Integer,primary_key=True)
+  uid = Column('uid' , Integer)
+  pid = Column('pid' , Integer)
+  tedad = Column('tedad' , Integer)
+  
 
 
 #

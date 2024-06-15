@@ -9,7 +9,7 @@ from bson.objectid import ObjectId
 from io import BytesIO
 from db.db_config import session
 from schemas import AddProductBase
-from db.models import Product
+from db.models import Product, SubProduct
 from typing import Annotated
 from db.db_config import mgdb
 from fastapi import FastAPI, File, UploadFile, HTTPException
@@ -180,6 +180,77 @@ def getcheapproducts(gid: int,limit :Optional[int] = 8):
         return {"message": "محصولی موجود نمی باشد"}
 
     return products
+
+@router.get("/mobiles", status_code=status.HTTP_200_OK)
+def get_mobiles(limit:int,response:Response):
+
+    products = session.query(Product).filter(Product.categoryid == 1).limit(limit).all()
+    if(products is None):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "محصولی در این صفحه موجود نیست"}
+
+    return products
+
+
+@router.get("/laptops", status_code=status.HTTP_200_OK)
+def get_laptops(limit:int,response:Response):
+
+    products = session.query(Product).filter(Product.categoryid == 3).limit(limit).all()
+    if(products is None):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "محصولی در این صفحه موجود نیست"}
+
+    return products
+
+
+@router.get("/consoles", status_code=status.HTTP_200_OK)
+def get_consoles(limit:int,response:Response):
+
+    products = session.query(Product).filter(Product.categoryid == 11).limit(limit).all()
+    if(products is None):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "محصولی در این صفحه موجود نیست"}
+
+    return products
+
+@router.get("/shop", status_code=status.HTTP_200_OK)
+def get_consoles(scid:int,order:int,response:Response):
+
+
+    if (order == 0):
+        products = session.query(Product).filter(Product.scid == scid).all()
+    elif (order == 1):
+        products = session.query(Product).filter(Product.scid == scid).order_by(Product.price.desc()).all()
+    elif (order == -1):
+        products = session.query(Product).filter(Product.scid == scid).order_by(Product.price).all()
+    else:
+        return "order error"
+    if(products is None or len(products) == 0):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "محصولی در این دسته بندی موجود نیست"}
+
+    return products
+
+
+@router.get("/subproduct", status_code=status.HTTP_200_OK)
+def get_subproduct(pid:int,response:Response):
+
+    subproducts = session.query(SubProduct).filter(SubProduct.pid == pid).all()
+    if(subproducts is None or len(subproducts) == 0):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "محصولی موجود نیست"}
+
+    return subproducts
+
+@router.get("/{product_name}", status_code=status.HTTP_200_OK)
+def get_product_by_name(product_name:str,response:Response):
+
+    product = session.query(Product).filter(Product.title == product_name).first()
+    if(product is None):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "چنین محصولی یافت نشد"}
+
+    return product
 
 
 
