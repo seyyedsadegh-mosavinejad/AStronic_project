@@ -31,7 +31,7 @@ class AddProductBase(BaseModel):
     price: float
     categoryid: int
 class AddToCart(BaseModel):
-    pid: int
+    spid: int
     tedad: int
 
 # class AddProductPictureBase(BaseModel):

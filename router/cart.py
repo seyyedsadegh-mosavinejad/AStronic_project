@@ -33,16 +33,22 @@ async def add_product(atc: AddToCart,response:Response,
     user = get_user_by_phone(current_user.get('sub'))
     uid = user.uid
 
-    product = session.query(Product).filter(Product.pid == atc.pid).first()
+    product = session.query(SubProduct).filter(SubProduct.spid == atc.spid).first()
     if not product:
         return {
             "error": "چنین محصولی یافت نشد"
         }
-    cart = session.query(Cart).filter(and_(Cart.uid == uid, Cart.pid == atc.pid)).first()
+    cart = session.query(Cart).filter(and_(Cart.uid == uid, Cart.spid == atc.spid)).first()
+
+
     if not cart:
+        if product.mojoodi < atc.tedad:
+            return {
+                "message": "موجودی محصول کمتر از تعداد وارد شده است"
+            }
         cart = Cart(
             uid=uid,
-            pid=atc.pid,
+            spid=atc.spid,
             tedad=atc.tedad
         )
         session.add(cart)
@@ -50,7 +56,11 @@ async def add_product(atc: AddToCart,response:Response,
         return {
             "message": "محصول مورد نظر به سبد خرید اضافه شد"
         }
-
+    if product.mojoodi < atc.tedad + cart.tedad:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {
+            "message": "موجودی محصول کمتر از تعداد وارد شده است"
+        }
     cart.tedad += atc.tedad
     session.commit()
 
@@ -60,17 +70,17 @@ async def add_product(atc: AddToCart,response:Response,
 
 
 @router.get("/remove")
-async def remove_product(pid: int,response:Response,
+async def remove_product(spid: int,response:Response,
                       current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
     user = get_user_by_phone(current_user.get('sub'))
     uid = user.uid
 
-    product = session.query(Product).filter(Product.pid == pid).first()
+    product = session.query(SubProduct).filter(SubProduct.spid == spid).first()
     if not product:
         return {
             "error": "چنین محصولی یافت نشد"
         }
-    cart = session.query(Cart).filter(and_(Cart.uid == uid, Cart.pid == pid)).first()
+    cart = session.query(Cart).filter(and_(Cart.uid == uid, Cart.spid == spid)).first()
     if not cart:
 
         return {
@@ -123,7 +133,7 @@ async def get_product(response:Response,
     mycart = []
     for cart in carts:
         d = {}
-        d["pid"] = cart.pid
+        d["spid"] = cart.spid
         d["tedad"] = cart.tedad
         mycart.append(d)
 
@@ -148,22 +158,26 @@ async def get_number(response:Response,
 
 
 @router.get("/settedad")
-async def set_product(pid: int, tedad: int, response:Response,
+async def set_product(spid: int, tedad: int, response:Response,
                       current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
     user = get_user_by_phone(current_user.get('sub'))
     uid = user.uid
 
-    product = session.query(Product).filter(Product.pid == pid).first()
+    product = session.query(SubProduct).filter(SubProduct.spid == spid).first()
     if not product:
         return {
             "error": "چنین محصولی یافت نشد"
         }
 
-    cart = session.query(Cart).filter(and_(Cart.uid == uid,Cart.pid == pid)).first()
+    cart = session.query(Cart).filter(and_(Cart.uid == uid, Cart.spid == spid)).first()
+    if tedad > product.mojoodi:
+        return {
+            "message": "موجودی محصول کمتر از تعداد وارد شده است"
+        }
     if not cart :
         cart = Cart(
             uid=uid,
-            pid=pid,
+            spid=spid,
             tedad=tedad
         )
         session.add(cart)

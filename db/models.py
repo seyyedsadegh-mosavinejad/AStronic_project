@@ -71,7 +71,7 @@ class Cart(base):
   __tablename__ = "cart"
   cid = Column('cid' , Integer,primary_key=True)
   uid = Column('uid' , Integer)
-  pid = Column('pid' , Integer)
+  spid = Column('spid' , Integer)
   tedad = Column('tedad' , Integer)
   
 
