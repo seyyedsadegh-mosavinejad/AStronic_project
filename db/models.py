@@ -7,18 +7,22 @@ base = declarative_base()
 
 
 class User(base):
-    __tablename__ = "users"
-    uid = Column('uid', Integer, primary_key=True)
-    phonenumber = Column('phonenumber', String(11), unique=True)
-    password = Column('password', String(128))
-    username = Column('username', String(50),nullable=True)
-    email = Column('email', String(255),nullable=True)
+  __tablename__ = "users"
+  uid = Column('uid', Integer, primary_key=True)
+  phonenumber = Column('phonenumber', String(11), unique=True)
+  password = Column('password', String(128))
+  username = Column('username', String(50),nullable=True)
+  email = Column('email', String(255),nullable=True)
 
-    firstname = Column('firstname', String(255), nullable=True)
-    lastname = Column('lastname', String(255), nullable=True)
+  firstname = Column('firstname', String(255), nullable=True)
+  lastname = Column('lastname', String(255), nullable=True)
 
-    nationalcode = Column('nationalcode', String(10), nullable=True)
-    cardnumber = Column('cardnumber', String(16), nullable=True)
+  nationalcode = Column('nationalcode', String(10), nullable=True)
+  cardnumber = Column('cardnumber', String(16), nullable=True)
+
+  sefareshha = relationship("Sefaresh", back_populates="user")
+  cart = relationship("Cart", back_populates="user")
+  addresses = relationship("Address", back_populates="user")
     # isowner = Column('isowner', Boolean, default=False)
     # completed = Column('completed', Boolean, default=False)
 
@@ -28,6 +32,20 @@ class User(base):
     # rents = relationship('Rent', backref='renter')
 
 
+class Category(base):
+  __tablename__ = "categories"
+  categoryid = Column('categoryid', Integer, primary_key=True)
+  category = Column('category', String(255))
+  subCategories = relationship("SubCategory", back_populates="category")
+  products = relationship("Product", back_populates="category")
+class SubCategory(base):
+  __tablename__ = "subcategories"
+  scid = Column('scid', Integer, primary_key=True)
+  subcategory = Column('subcategory', String(200))
+  categoryid = Column('categoryid', Integer, ForeignKey("categories.categoryid"))
+  category = relationship("Category", back_populates="subCategories")
+  products = relationship("Product", back_populates="subCategory")
+
 
 class Product(base):
   __tablename__ = "products"
@@ -36,52 +54,73 @@ class Product(base):
   model = Column('model', String(255))
   price = Column('price', BigInteger,default=0)
   description = Column('description', Text)
-  categoryid = Column('categoryid', Integer)
-  scid = Column('scid', Integer)
+  categoryid = Column('categoryid', Integer, ForeignKey("categories.categoryid"))
+  scid = Column('scid', Integer, ForeignKey("subcategories.scid"))
+  category = relationship("Category", back_populates="products")
+  subCategory = relationship("SubCategory", back_populates="products")
+  subProducts = relationship("SubProduct", back_populates="product")
 
 class SubProduct(base):
   __tablename__ = "subproduct"
   spid = Column('spid' , Integer,primary_key=True)
-  pid = Column('pid' , Integer)
+  pid = Column('pid' , Integer, ForeignKey("products.pid"))
   price = Column('price', BigInteger,default=0)
   mojoodi = Column('mojoodi', Integer,default=0)
   color = Column('color', String(20),default=0)
   color_name = Column('colorname', String(30),default=0)
-
+  product = relationship("Product", back_populates="subProducts")
+  sefareshRows = relationship("SefareshRow", back_populates="subProduct")
+  carts = relationship("Cart", back_populates="subProduct")
 class Sefaresh(base):
   __tablename__ = "safaresh"
   sid = Column('sid' , Integer,primary_key=True)
-  uid = Column('uid' , Integer)
-  addressid = Column('addressid' , Integer)
-  raveshErsalid = Column('raveshersalid' , Integer)
-  statusid = Column('statusid' , Integer)
+  uid = Column('uid' , Integer, ForeignKey("users.uid"))
+  addressid = Column('addressid' , Integer, ForeignKey("addresses.addressid"))
+  raveshErsalid = Column('raveshersalid' , Integer, ForeignKey("raveshersals.raveshersalid"))
+  statusid = Column('statusid' , Integer, ForeignKey("statuses.statusid"))
   date = Column('date' , Date)
   mablaq = Column('mablaq' , String(20))
+
+  user = relationship("User", back_populates="sefareshha")
+  address = relationship("Address", back_populates="sefareshha")
+  raveshErsal = relationship("Raveshersal", back_populates="sefareshha")
+  status = relationship("Status", back_populates="sefareshha")
+  rows = relationship("SefareshRow", back_populates="sefaresh")
+class Status(base):
+  __tablename__ = "statuses"
+  statusid = Column('statusid' , Integer,primary_key=True)
+  status = Column('status' , String(100))
+
+  sefareshha = relationship("Sefaresh", back_populates="status")
+
 
 class SefareshRow(base):
   __tablename__ = "sefareshrow"
   srid = Column('srid' , Integer,primary_key=True)
-  sid = Column('sid' , Integer)
-  spid = Column('spid' , Integer)
+  sid = Column('sid' , Integer, ForeignKey("safaresh.sid"))
+  spid = Column('spid' , Integer, ForeignKey("subproduct.spid"))
   tedad = Column('tedad' , Integer)
   price = Column('price' , Integer)
   totalPrice = Column('total price' , Integer)
 
+  sefaresh = relationship("Sefaresh", back_populates="rows")
+  subProduct = relationship("SubProduct", back_populates="sefareshRows")
 class Raveshersal(base):
   __tablename__ = "raveshersals"
   raveshersalid = Column('raveshersalid' , Integer,primary_key=True)
   raveshersal = Column('raveshersal' , String(100))
 
+  sefareshha = relationship("Sefaresh", back_populates="raveshErsal")
 
 
 class Cart(base):
   __tablename__ = "cart"
   cid = Column('cid' , Integer,primary_key=True)
-  uid = Column('uid' , Integer)
-  spid = Column('spid' , Integer)
+  uid = Column('uid' , Integer, ForeignKey("users.uid"))
+  spid = Column('spid' , Integer, ForeignKey("subproduct.spid"))
   tedad = Column('tedad' , Integer)
-  
-
+  user = relationship("User", back_populates="cart")
+  subProduct = relationship("SubProduct", back_populates="carts")
 
 #
 
@@ -97,7 +136,8 @@ class Address(base):
   location = Column('location', Text)
   uid = Column('uid', Integer, ForeignKey('users.uid'))
 
-
+  sefareshha = relationship("Sefaresh", back_populates="address")
+  user = relationship("User", back_populates="addresses")
 #
 # class Customer(base):
 #   __tablename__ = "customers"

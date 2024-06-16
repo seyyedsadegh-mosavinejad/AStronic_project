@@ -46,8 +46,8 @@ services:
       - PMA_ARBITRARY=1
     labels:
       - "traefik.enable=true"
-#      - "traefik.http.routers.phpmyadmin.rule=Host(`localhost`)"
-      - "traefik.http.routers.phpmyadmin.rule=Host(`db.ssmss.sbs`)"
+     - "traefik.http.routers.phpmyadmin.rule=Host(`localhost`)"
+#      - "traefik.http.routers.phpmyadmin.rule=Host(`db.ssmss.sbs`)"
       - "traefik.http.routers.phpmyadmin.entrypoints=db"
   redis:
     image: redis:7.0.15
@@ -89,9 +89,9 @@ services:
   mongodb:
     # image: mongodb/mongodb-community-server:6.0-ubi8
     image: mongo:4.4.20
-#    environment:
-#      MONGODB_INITDB_ROOT_USERNAME: root
-#      MONGODB_INITDB_ROOT_PASSWORD: 66405206
+    environment:
+      # MONGODB_INITDB_ROOT_USERNAME: root
+      # MONGODB_INITDB_ROOT_PASSWORD: 66405206
     volumes:
       - type: bind
         source: ./data
