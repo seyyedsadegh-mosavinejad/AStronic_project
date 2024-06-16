@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 15, 2024 at 11:21 AM
+-- Generation Time: Jun 16, 2024 at 02:13 PM
 -- Server version: 10.6.17-MariaDB-1:10.6.17+maria~ubu2004
 -- PHP Version: 8.2.19
 
@@ -39,6 +39,13 @@ CREATE TABLE `addresses` (
   `uid` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `addresses`
+--
+
+INSERT INTO `addresses` (`addressid`, `ostan`, `shahr`, `address`, `postalcode`, `pelak`, `phone`, `location`, `uid`) VALUES
+(1, 'مازندران', 'بابلسر', 'پازوار رو به روی دهکده پارسیان', '4745134163', '479', '01132384061', '', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -48,7 +55,7 @@ CREATE TABLE `addresses` (
 CREATE TABLE `cart` (
   `cid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
+  `spid` int(11) NOT NULL,
   `tedad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -143,6 +150,13 @@ CREATE TABLE `safaresh` (
   `mablaq` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `safaresh`
+--
+
+INSERT INTO `safaresh` (`sid`, `uid`, `addressid`, `raveshersalid`, `statusid`, `date`, `mablaq`) VALUES
+(1, 1, 1, 1, 2, '2024-06-16', '36500000');
+
 -- --------------------------------------------------------
 
 --
@@ -152,11 +166,19 @@ CREATE TABLE `safaresh` (
 CREATE TABLE `sefareshrow` (
   `srid` int(11) NOT NULL,
   `sid` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
+  `spid` int(11) NOT NULL,
   `tedad` int(11) NOT NULL,
   `price` int(20) NOT NULL,
   `total price` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sefareshrow`
+--
+
+INSERT INTO `sefareshrow` (`srid`, `sid`, `spid`, `tedad`, `price`, `total price`) VALUES
+(1, 1, 2, 1, 12500000, 12500000),
+(2, 1, 1, 2, 12000000, 24000000);
 
 -- --------------------------------------------------------
 
@@ -299,6 +321,12 @@ ALTER TABLE `raveshersals`
   ADD PRIMARY KEY (`raveshersalid`);
 
 --
+-- Indexes for table `safaresh`
+--
+ALTER TABLE `safaresh`
+  ADD PRIMARY KEY (`sid`);
+
+--
 -- Indexes for table `sefareshrow`
 --
 ALTER TABLE `sefareshrow`
@@ -337,13 +365,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `addressid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `addressid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -364,10 +392,16 @@ ALTER TABLE `raveshersals`
   MODIFY `raveshersalid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `safaresh`
+--
+ALTER TABLE `safaresh`
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `sefareshrow`
 --
 ALTER TABLE `sefareshrow`
-  MODIFY `srid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `srid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `statuses`

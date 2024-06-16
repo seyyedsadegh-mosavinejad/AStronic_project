@@ -28,7 +28,8 @@ MGDB_PASS = ""
 
 
 
-mymongo = pymongo.MongoClient(f"mongodb://{MGDB_USER}:{MGDB_PASS}@{MGDB_HOST}:{MGDB_PORT}/")
+# mymongo = pymongo.MongoClient(f"mongodb://{MGDB_USER}:{MGDB_PASS}@{MGDB_HOST}:{MGDB_PORT}/")
+mymongo = pymongo.MongoClient(f"mongodb://{MGDB_HOST}:{MGDB_PORT}/")
 
 mgdb = mymongo["astronic"]
 
