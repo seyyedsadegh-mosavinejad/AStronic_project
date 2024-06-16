@@ -4,7 +4,7 @@ from db.db_config import engine
 from db.models import base
 # from router import customer, product, owner, admin
 from router import user
-from router import product , cart, subproduct
+from router import product , cart, subproduct, sefaresh
 from auth import authentication
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, FileResponse
@@ -24,6 +24,7 @@ app.include_router(user.router)
 app.include_router(product.router)
 app.include_router(cart.router)
 app.include_router(subproduct.router)
+app.include_router(sefaresh.router)
 # app.include_router(admin.router)
 # app.mount("/images", StaticFiles(directory="images"), name="images")
 # app.mount("/", StaticFiles(directory="template"), name="template")

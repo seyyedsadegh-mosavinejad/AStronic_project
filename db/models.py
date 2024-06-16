@@ -62,10 +62,17 @@ class SefareshRow(base):
   __tablename__ = "sefareshrow"
   srid = Column('srid' , Integer,primary_key=True)
   sid = Column('sid' , Integer)
-  pid = Column('pid' , Integer)
+  spid = Column('spid' , Integer)
   tedad = Column('tedad' , Integer)
   price = Column('price' , Integer)
   totalPrice = Column('total price' , Integer)
+
+class Raveshersal(base):
+  __tablename__ = "raveshersals"
+  raveshersalid = Column('raveshersalid' , Integer,primary_key=True)
+  raveshersal = Column('raveshersal' , String(100))
+
+
 
 class Cart(base):
   __tablename__ = "cart"

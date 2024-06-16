@@ -20,8 +20,13 @@ RDS_PASSWORD = "66405206"
 MGDB_HOST = "127.0.0.1"
 # MGDB_HOST = "astronic_project-mongodb-1"
 MGDB_PORT = "27017"
-MGDB_USER = "root"
-MGDB_PASS = "66405206"
+# MGDB_USER = "root"
+# MGDB_PASS = "66405206"
+
+MGDB_USER = ""
+MGDB_PASS = ""
+
+
 
 mymongo = pymongo.MongoClient(f"mongodb://{MGDB_USER}:{MGDB_PASS}@{MGDB_HOST}:{MGDB_PORT}/")
 

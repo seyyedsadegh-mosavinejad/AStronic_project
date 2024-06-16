@@ -88,7 +88,8 @@ services:
 #      - mongodb
 
   mongodb:
-    image: mongodb/mongodb-community-server:6.0-ubi8
+    # image: mongodb/mongodb-community-server:6.0-ubi8
+    image: mongo:4.4.20
     environment:
       - MONGODB_INITDB_ROOT_USERNAME=root
       - MONGODB_INITDB_ROOT_PASSWORD=66405206
