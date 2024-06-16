@@ -80,7 +80,7 @@ services:
 #      - "traefik.http.routers.api_service.entrypoints=myapi"
 
 #  mymongo:
-#    image: mongodb/mongodb-community-server:6.0-ubi8
+#    image: mongo:4.4.20
 #    environment:
 #      - CONN_STR=mongodb://root:66405206@mongodb
 #    command: '/bin/bash -c "sleep 5; mongosh $CONN_STR --eval "'
