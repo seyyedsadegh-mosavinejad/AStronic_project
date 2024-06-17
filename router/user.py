@@ -1,11 +1,14 @@
 import random
 
 from fastapi import Depends, APIRouter, status, Response
-from db.models import User
+
+from db.db_user import get_user_by_phone
+from db.models import User, Address
 from db.db_config import session
 from sqlalchemy.sql.expression import and_
 from auth import oauth2
-from schemas import UserSignUpBase, UserAuth, UserLoginBase, CustomerCompeleteSignUpBase, RentVilllaBase, VerifyphoneBase
+from schemas import UserSignUpBase, UserAuth, UserLoginBase, CustomerCompeleteSignUpBase, RentVilllaBase
+from schemas import VerifyphoneBase, AddressBase
 from functions.validation import *
 from typing import Annotated
 from auth.oauth2 import get_current_active_user
@@ -158,6 +161,28 @@ def customer_login(userbase: UserLoginBase, response: Response):
 
     }
 
+@router.post('/addaddress')
+def add_address(addressbase: AddressBase, response: Response,
+                current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
+    user = get_user_by_phone(current_user.get('sub'))
+    uid = user.uid
+
+    address = Address(
+        ostan=addressbase.ostan,
+        shahr=addressbase.shahr,
+        pelak=addressbase.pelak,
+        address=addressbase.address,
+        phone=addressbase.phone,
+        postalcode=addressbase.postalCode,
+        location=addressbase.location,
+        uid=uid
+    )
+    session.add(address)
+    session.commit()
+
+    return {
+        "message": "آدرس جدید با موفقیت اضافه شد."
+    }
 
 # @router.post("/authtest")
 # def authtest(current_customer: Annotated[CustomerAuth, Depends(get_current_active_customer)]):

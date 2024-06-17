@@ -46,8 +46,8 @@ services:
       - PMA_ARBITRARY=1
     labels:
       - "traefik.enable=true"
-#      - "traefik.http.routers.phpmyadmin.rule=Host(`localhost`)"
-      - "traefik.http.routers.phpmyadmin.rule=Host(`db.ssmss.sbs`)"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`localhost`)"
+#      - "traefik.http.routers.phpmyadmin.rule=Host(`db.ssmss.sbs`)"
       - "traefik.http.routers.phpmyadmin.entrypoints=db"
   redis:
     image: redis:7.0.15

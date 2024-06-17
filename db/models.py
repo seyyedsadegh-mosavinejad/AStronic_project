@@ -13,7 +13,7 @@ class User(base):
   password = Column('password', String(128))
   username = Column('username', String(50),nullable=True)
   email = Column('email', String(255),nullable=True)
-
+  isModir = Column("ismodir", Boolean, default=False)
   firstname = Column('firstname', String(255), nullable=True)
   lastname = Column('lastname', String(255), nullable=True)
 

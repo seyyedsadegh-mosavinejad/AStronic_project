@@ -12,7 +12,7 @@ from bson.objectid import ObjectId
 from io import BytesIO
 from db.db_config import session
 from schemas import AddProductBase, AddToCart, UserAuth
-from db.models import Product, SubProduct, Cart, Raveshersal, Address, Sefaresh, SefareshRow
+from db.models import Product, SubProduct, Cart, Raveshersal, Address, Sefaresh, SefareshRow, User
 from typing import Annotated
 from db.db_config import mgdb
 from sqlalchemy import or_, and_
@@ -29,75 +29,44 @@ fs = gridfs.GridFS(mgdb)
 
 
 @router.get("/allsefaresh")
-async def get_all_sefaresh(response:Response):
+async def get_all_sefaresh(response:Response, current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
+    user = get_user_by_phone(current_user.get('sub'))
+    uid = user.uid
+    user = session.query(User).filter(User.uid == uid).first()
+    if not user.isModir:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {
+            "error": "شما دسترسی کافی برای این عملیات را ندارید"
+        }
 
     sefareshs = session.query(Sefaresh).all()
-
-
     return sefareshs
 
 
 
-@router.get("/sabt")
-async def sabt_sefaresh(addressid: int, raveshersalid: int, current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
+@router.get("/changestatus")
+async def change_status_sefaresh(sid: int, newstatus: int, current_user: Annotated[UserAuth, Depends(get_current_active_user)], response:Response):
     user = get_user_by_phone(current_user.get('sub'))
     uid = user.uid
-
-    address = session.query(Address).filter(Address.addressid == addressid).first()
-    if not address:
+    user = session.query(User).filter(User.uid == uid).first()
+    if not user.isModir:
+        response.status_code = status.HTTP_400_BAD_REQUEST
         return {
-            "message": "آدرس مورد نظر یافت نشد"
-        }
-    if address.uid != uid:
-        return {
-            "message": "آدرس مورد نظر یافت نشد"
-        }
-    raveshersal = session.query(Raveshersal).filter(Raveshersal.raveshersalid == raveshersalid).first()
-    if not raveshersal:
-        return {
-            "error": "روش ارسال نا معتبر"
+            "error": "شما دسترسی کافی برای این عملیات را ندارید"
         }
 
-    carts = session.query(Cart).filter(Cart.uid == uid).all()
-    if not carts or len(carts) == 0:
+    sefaresh = session.query(Sefaresh).filter(Sefaresh.sid == sid).first()
+
+    if sefaresh is None:
         return {
-            "message": "سبد خرید شما خالی است"
+            "error": "سفارشی یافت نشد"
         }
 
-    mablaq = 0
-    for cart in carts:
-        sp = session.query(SubProduct).filter(SubProduct.spid == cart.spid).first()
-        mablaq += cart.tedad * sp.price
-    sefaresh = Sefaresh(
-        uid=uid,
-        addressid=addressid,
-        raveshErsalid=raveshersalid,
-        statusid=2,
-        date=datetime.date.today(),
-        mablaq=mablaq,
-    )
-    session.add(sefaresh)
+    sefaresh.statusid = newstatus
     session.commit()
 
-
-    for cart in carts:
-        sp = session.query(SubProduct).filter(SubProduct.spid == cart.spid).first()
-        sefrow = SefareshRow(
-            sid=sefaresh.sid,
-            spid=cart.spid,
-            tedad=cart.tedad,
-            price=sp.price,
-            totalPrice=sp.price*cart.tedad
-        )
-        session.add(sefrow)
-        session.commit()
-
-        session.delete(cart)
-        session.commit()
-
-
     return {
-        "message": f"سفارش شما با کد {sefaresh.sid} با موفقیت ثبت شد. ودر وضعیت منتظر پرداخت قرار دارد "
+        "message": f"وضعیت سفارش شما با کد {sefaresh.sid} با موفقیت تغییر کرد. "
     }
 
 #

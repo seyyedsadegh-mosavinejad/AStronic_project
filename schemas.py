@@ -63,6 +63,15 @@ class UserLoginBase(BaseModel):
     phonenumber:str
     password:str
 
+class AddressBase(BaseModel):
+    ostan:str
+    shahr:str
+    pelak:str
+    address:str
+    phone:str
+    postalCode:str
+    location:str
+
 
 
 class UserAuth(BaseModel):

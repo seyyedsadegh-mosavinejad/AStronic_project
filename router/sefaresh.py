@@ -12,7 +12,7 @@ from bson.objectid import ObjectId
 from io import BytesIO
 from db.db_config import session
 from schemas import AddProductBase, AddToCart, UserAuth
-from db.models import Product, SubProduct, Cart, Raveshersal, Address, Sefaresh, SefareshRow
+from db.models import Product, SubProduct, Cart, Raveshersal, Address, Sefaresh, SefareshRow, Status
 from typing import Annotated
 from db.db_config import mgdb
 from sqlalchemy import or_, and_
@@ -35,7 +35,25 @@ async def get_raveshersal(response:Response):
 
     return raveshha
 
+@router.get("/statuses")
+async def get_statuses(response:Response):
 
+    statuses = session.query(Status).all()
+
+    return statuses
+
+@router.get("/mysefareshha")
+async def get_mysefareshha(response:Response, current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
+    user = get_user_by_phone(current_user.get('sub'))
+    uid = user.uid
+
+    sefareshha = session.query(Sefaresh).filter(Sefaresh.uid == uid).all()
+    if not sefareshha or len(sefareshha) == 0:
+        return {
+            "message": "سفارشس برای شما یافت نشد"
+        }
+
+    return sefareshha
 
 @router.get("/sabt")
 async def sabt_sefaresh(addressid: int, raveshersalid: int, current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
