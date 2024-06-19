@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, URL, String, BigInteger, Text, ForeignKey, Boolean, Date
+from sqlalchemy import Column, Integer, URL, String, BigInteger, Text, ForeignKey, Boolean, Date, DateTime
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -23,6 +23,8 @@ class User(base):
   sefareshha = relationship("Sefaresh", back_populates="user")
   cart = relationship("Cart", back_populates="user")
   addresses = relationship("Address", back_populates="user")
+  tickets = relationship("Ticket", back_populates="user")
+
     # isowner = Column('isowner', Boolean, default=False)
     # completed = Column('completed', Boolean, default=False)
 
@@ -30,6 +32,17 @@ class User(base):
     # products = relationship('Product', backref='owner')
     # addresses = relationship('Address', backref='owner')
     # rents = relationship('Rent', backref='renter')
+
+
+
+class Ticket(base):
+  __tablename__ = "tickets"
+  tid = Column('tid' , Integer,primary_key=True)
+  uid = Column('uid', Integer, ForeignKey("users.uid"))
+  message = Column('message', Text)
+  subject = Column("subject", String(255))
+  date = Column("date", DateTime)
+  user = relationship("User", back_populates="tickets")
 
 
 class Category(base):
