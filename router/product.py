@@ -1,4 +1,4 @@
-from fastapi import APIRouter,status,Response,Query
+from fastapi import APIRouter,status,Response,Query, Depends
 from fastapi.responses import StreamingResponse
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
@@ -7,9 +7,12 @@ import gridfs
 from typing import Optional
 from bson.objectid import ObjectId
 from io import BytesIO
+
+from auth.oauth2 import get_current_active_user
 from db.db_config import session
-from schemas import AddProductBase
-from db.models import Product, SubProduct
+from db.db_user import get_user_by_phone
+from schemas import AddProductBase, UserAuth
+from db.models import Product, SubProduct, User
 from typing import Annotated
 from db.db_config import mgdb
 from fastapi import FastAPI, File, UploadFile, HTTPException
@@ -20,9 +23,44 @@ import re
 router = APIRouter(prefix='/product' , tags=['product'])
 fs = gridfs.GridFS(mgdb)
 
+
+@router.get("/deletepic/{image_id}")
+async def create_file(image_id:str, current_user: Annotated[UserAuth, Depends(get_current_active_user)],
+                      response:Response, file: UploadFile = File(...)):
+    user = get_user_by_phone(current_user.get('sub'))
+    uid = user.uid
+    user = session.query(User).filter(User.uid == uid).first()
+    if not user.isModir:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {
+            "error": "شما دسترسی کافی برای این عملیات را ندارید"
+        }
+    try:
+        # Convert image_id to ObjectId
+        image_id = ObjectId(image_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Invalid image ID format")
+    collection = mgdb[""]
+    result = await collection.delete_one({"_id": image_id})
+
+    if result.deleted_count == 1:
+        return {"message": f"Successfully deleted the image with id: {image_id}"}
+    else:
+        raise HTTPException(status_code=404, detail="Image not found")
+
+
 # Annotated[bytes, File(description="A file read as bytes")]
 @router.post("/addpic")
-async def create_file(pid: int, file: UploadFile = File(...)):
+async def create_file(pid: int, current_user: Annotated[UserAuth, Depends(get_current_active_user)],
+                      response:Response, file: UploadFile = File(...)):
+    user = get_user_by_phone(current_user.get('sub'))
+    uid = user.uid
+    user = session.query(User).filter(User.uid == uid).first()
+    if not user.isModir:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {
+            "error": "شما دسترسی کافی برای این عملیات را ندارید"
+        }
 
 
 
@@ -81,7 +119,7 @@ async def get_images(pid: int):
 
     pattern = r"'(.*?)'"
     image_id_list = re.findall(pattern, image_object_list.__str__())
-    return {image_id_list.__str__()}
+    return image_id_list
 
 
 

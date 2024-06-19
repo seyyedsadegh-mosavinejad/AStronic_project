@@ -43,7 +43,7 @@ async def get_statuses(response:Response):
     return statuses
 
 @router.get("/mysefareshha")
-async def get_mysefareshha(response:Response, current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
+async def get_mysefareshha(response: Response, current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
     user = get_user_by_phone(current_user.get('sub'))
     uid = user.uid
 
