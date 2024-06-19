@@ -20,6 +20,13 @@ from db.db_config import rds
 
 router = APIRouter(prefix='/user', tags=['user'])
 
+@router.get("/isvaliduser")
+async def is_valid_user(response:Response,
+                      current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
+    user = session.query(User).filter(User.uid == current_user.get('sub').uid)
+    if not user:
+        return False
+    return True
 
 @router.post('/signup')
 def customer_sign_up(userbase: UserSignUpBase,response: Response):
@@ -183,6 +190,7 @@ def add_address(addressbase: AddressBase, response: Response,
     return {
         "message": "آدرس جدید با موفقیت اضافه شد."
     }
+
 
 # @router.post("/authtest")
 # def authtest(current_customer: Annotated[CustomerAuth, Depends(get_current_active_customer)]):

@@ -287,8 +287,28 @@ def get_product_by_name(product_name:str,response:Response):
     if(product is None):
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"message": "چنین محصولی یافت نشد"}
+    d = {}
+    d["pid"] = product.pid
+    d["title"] = product.title
+    d["model"] = product.model
+    d["guarantee"] = product.guarantee
+    d["sub"] = []
 
-    return product
+
+    for subproduct in product.subProducts:
+        t = {}
+        t["price"] = subproduct.price
+        t["color"] = subproduct.color
+        t["color_name"] = subproduct.color_name
+        t["spid"] = subproduct.spid
+        d["sub"].append(t)
+    d["description"] = product.description
+    d["information"] = product.information
+
+
+
+
+    return d
 
 
 

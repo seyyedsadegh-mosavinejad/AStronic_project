@@ -139,6 +139,34 @@ async def get_product(response:Response,
 
     return mycart
 
+@router.get("/get2")
+async def get2_product(response:Response,
+                      current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
+    user = get_user_by_phone(current_user.get('sub'))
+    uid = user.uid
+
+    carts = session.query(Cart).filter(Cart.uid == uid).all()
+    # return carts# return carts
+    if not carts or len(carts) == 0:
+
+        return {
+            "message": "سبد خرید شما خالی است"
+        }
+    mycart = []
+    for cart in carts:
+        d = {}
+        d["spid"] = cart.spid
+        d["tedad"] = cart.tedad
+        d["title"] = cart.subProduct.product.title
+        d["price"] = cart.subProduct.price
+        d["guarantee"] = cart.subProduct.product.guarantee
+        d["color"] = cart.subProduct.color
+        d["colorName"] = cart.subProduct.color_name
+        mycart.append(d)
+
+    return mycart
+
+
 @router.get("/getnumber")
 async def get_number(response:Response,
                       current_user: Annotated[UserAuth, Depends(get_current_active_user)]):

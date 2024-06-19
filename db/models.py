@@ -55,6 +55,8 @@ class Product(base):
   price = Column('price', BigInteger,default=0)
   description = Column('description', Text)
   categoryid = Column('categoryid', Integer, ForeignKey("categories.categoryid"))
+  guarantee = Column('guarantee', Integer)
+  information = Column('information', Text)
   scid = Column('scid', Integer, ForeignKey("subcategories.scid"))
   category = relationship("Category", back_populates="products")
   subCategory = relationship("SubCategory", back_populates="products")
@@ -68,6 +70,7 @@ class SubProduct(base):
   mojoodi = Column('mojoodi', Integer,default=0)
   color = Column('color', String(20),default=0)
   color_name = Column('colorname', String(30),default=0)
+
   product = relationship("Product", back_populates="subProducts")
   sefareshRows = relationship("SefareshRow", back_populates="subProduct")
   carts = relationship("Cart", back_populates="subProduct")

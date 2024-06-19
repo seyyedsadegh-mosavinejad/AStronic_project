@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 16, 2024 at 02:13 PM
+-- Generation Time: Jun 19, 2024 at 03:39 PM
 -- Server version: 10.6.17-MariaDB-1:10.6.17+maria~ubu2004
 -- PHP Version: 8.2.19
 
@@ -44,7 +44,8 @@ CREATE TABLE `addresses` (
 --
 
 INSERT INTO `addresses` (`addressid`, `ostan`, `shahr`, `address`, `postalcode`, `pelak`, `phone`, `location`, `uid`) VALUES
-(1, 'مازندران', 'بابلسر', 'پازوار رو به روی دهکده پارسیان', '4745134163', '479', '01132384061', '', 1);
+(1, 'مازندران', 'بابلسر', 'پازوار رو به روی دهکده پارسیان', '4745134163', '479', '01132384061', '', 1),
+(2, 'مازندران', 'بابلسر', 'پازوار روستای سرحمام منزل چمسمال', '4745134341', '520', '01132382073', '', 1);
 
 -- --------------------------------------------------------
 
@@ -58,6 +59,15 @@ CREATE TABLE `cart` (
   `spid` int(11) NOT NULL,
   `tedad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`cid`, `uid`, `spid`, `tedad`) VALUES
+(18, 1, 1, 2),
+(19, 2, 1, 3),
+(20, 2, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -110,8 +120,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`pid`, `title`, `model`, `price`, `description`, `categoryid`, `scid`, `guarantee`, `information`) VALUES
-(1, 'گوشی a55 samsung رنگ آبی', 'samsung galaxy a55 246/8 blue', 15000000, 'این گوشی سامسونگ a 55 است', 1, 1, 0, '<div id=\"p_container2\" class=\"border rounded-lg mb-5 py-3 pl-3\"><div class=\"w-full flex mb-3\"><div class=\"w-1/3 pt-2 font-bold text-red-500 text-lg\">مشخصات کلی</div><div class=\"w-2/3\"><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">مدل</div><div class=\"w-1/2 border-b py-2 font-semibold\">Galaxy S24 Ultra</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">وزن</div><div class=\"w-1/2 border-b py-2 font-semibold\">233 گرم</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">تعداد سیم کارت</div><div class=\"w-1/2 border-b py-2 font-semibold\">2 عدد</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">ویژگی های خاص</div><div class=\"w-1/2 border-b py-2 font-semibold\"><div class=\"mb-1\">مجهز به حسگر انگشت</div><div>مقاوم در برابر آب</div></div></div></div></div><div class=\"w-full flex mb-3\"><div class=\"w-1/3 pt-2 font-bold text-red-500 text-lg\">حافظه</div><div class=\"w-2/3\"><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">حافظه داخلی</div><div class=\"w-1/2 border-b py-2 font-semibold\">256 گیگابایت</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">مقدار رم</div><div class=\"w-1/2 border-b py-2 font-semibold\">12 گیگابایت</div></div></div></div><div class=\"w-full flex mb-3\"><div class=\"w-1/3 pt-2 font-bold text-red-500 text-lg\">دوربین</div><div class=\"w-2/3\"><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">دوربین&zwnj;های پشت گوشی</div><div class=\"w-1/2 border-b py-2 font-semibold\">4 ماژول دوربین</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">رزولوشن عکس</div><div class=\"w-1/2 border-b py-2 font-semibold\">200 مگاپیکسل</div></div></div></div><div class=\"w-full flex mb-3\"><div class=\"w-1/3 pt-2 font-bold text-red-500 text-lg\">امکانات نرم افزاری</div><div class=\"w-2/3\"><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">سیستم عامل</div><div class=\"w-1/2 border-b py-2 font-semibold\">Android</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">نسخه سیستم عامل</div><div class=\"w-1/2 border-b py-2 font-semibold\">Android 14</div></div></div></div><div class=\"w-full flex\"><div class=\"w-1/3 pt-2 font-bold text-red-500 text-lg\">صفحه نمایش</div><div class=\"w-2/3\"><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">اندازه</div><div class=\"w-1/2 border-b py-2 font-semibold\">6.8 اینچ</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">رزولوشن صفحه نمایش</div><div class=\"w-1/2 border-b py-2 font-semibold\">3120 x 1440</div></div></div></div></div>'),
-(2, 'گوشی a56 سامسونگ', 'samsung galaxy a54 black 128/8', 12000000, 'این گوشی سامسونگ عالی است', 1, 1, 0, '');
+(1, 'گوشی سامسونگ a55 samsung', 'samsung galaxy a55 246/8', 15000000, 'گلکسی A55 به‌عنوان پریمیوم‌ترین میان‌رده‌ی سال ۲۰۲۴ سامسونگ، با فریم فلزی و تراشه‌ی جدید Exynos 1480 همین شرکت، راهی بازار شده است. دوربین‌های اصلی، اولتراواید و ماکروی A55 نسبت به سال گذشته تغییر یا پیشرفتی نداشته‌اند؛ اما به‌لطف تراشه‌ی جدید، تجربه‌ی عکاسی لذت‌بخش و قابل قبولی ارائه می‌کنند. دوربین اصلی A55،‌ امکان فیلم‌برداری 4K با نرخ ۳۰ فریم‌برثانیه را نیز در اختیار قرار می‌دهد.\n\nدر بخش نمایشگر، گلکسی A55 از پنل OLED با ابعاد ۶٫۶ اینچ (حدود ۰٫۲ اینچ بزرگ‌تر از A54) استفاده می‌کند. نمایشگر، روشنایی و دقت رنگ خوبی ارائه می‌کند؛ اما حاشیه‌های قطور اطراف آن، می‌تواند یکی از نقاط ضعف بزرگ A55 باشد. باتری ۵۰۰۰ میلی‌آمپرساعتی A55، در کاربری‌های روزمره مثل وبگردی، گشتن در شبکه‌های اجتماعی و تماشای ویدیو، تا دو روز کاری نیز کاربر را همراهی خواهد کرد.', 1, 1, 18, '<div class=\"w-full flex mb-3\"><div class=\"w-1/3 pt-2 font-bold text-red-500 text-lg\">مشخصات کلی</div><div class=\"w-2/3\"><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">مدل</div><div class=\"w-1/2 border-b py-2 font-semibold\">Galaxy S24 Ultra</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">وزن</div><div class=\"w-1/2 border-b py-2 font-semibold\">233 گرم</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">تعداد سیم کارت</div><div class=\"w-1/2 border-b py-2 font-semibold\">2 عدد</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">ویژگی های خاص</div><div class=\"w-1/2 border-b py-2 font-semibold\"><div class=\"mb-1\">مجهز به حسگر انگشت</div><div>مقاوم در برابر آب</div></div></div></div></div><div class=\"w-full flex mb-3\"><div class=\"w-1/3 pt-2 font-bold text-red-500 text-lg\">حافظه</div><div class=\"w-2/3\"><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">حافظه داخلی</div><div class=\"w-1/2 border-b py-2 font-semibold\">256 گیگابایت</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">مقدار رم</div><div class=\"w-1/2 border-b py-2 font-semibold\">12 گیگابایت</div></div></div></div><div class=\"w-full flex mb-3\"><div class=\"w-1/3 pt-2 font-bold text-red-500 text-lg\">دوربین</div><div class=\"w-2/3\"><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">دوربین&zwnj;های پشت گوشی</div><div class=\"w-1/2 border-b py-2 font-semibold\">4 ماژول دوربین</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">رزولوشن عکس</div><div class=\"w-1/2 border-b py-2 font-semibold\">200 مگاپیکسل</div></div></div></div><div class=\"w-full flex mb-3\"><div class=\"w-1/3 pt-2 font-bold text-red-500 text-lg\">امکانات نرم افزاری</div><div class=\"w-2/3\"><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">سیستم عامل</div><div class=\"w-1/2 border-b py-2 font-semibold\">Android</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">نسخه سیستم عامل</div><div class=\"w-1/2 border-b py-2 font-semibold\">Android 14</div></div></div></div><div class=\"w-full flex\"><div class=\"w-1/3 pt-2 font-bold text-red-500 text-lg\">صفحه نمایش</div><div class=\"w-2/3\"><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">اندازه</div><div class=\"w-1/2 border-b py-2 font-semibold\">6.8 اینچ</div></div><div class=\"w-full flex py-2\"><div class=\"w-1/2 text-gray-500\">رزولوشن صفحه نمایش</div><div class=\"w-1/2 border-b py-2 font-semibold\">3120 x 1440</div></div></div></div>'),
+(2, 'گوشی a54 سامسونگ', 'samsung galaxy a54 black 128/8', 12000000, 'این گوشی سامسونگ عالی است', 1, 1, 0, '');
 
 -- --------------------------------------------------------
 
@@ -155,7 +165,7 @@ CREATE TABLE `safaresh` (
 --
 
 INSERT INTO `safaresh` (`sid`, `uid`, `addressid`, `raveshersalid`, `statusid`, `date`, `mablaq`) VALUES
-(1, 1, 1, 1, 2, '2024-06-16', '36500000');
+(1, 1, 1, 1, 4, '2024-06-16', '36500000');
 
 -- --------------------------------------------------------
 
@@ -264,6 +274,28 @@ INSERT INTO `subproduct` (`spid`, `pid`, `color`, `mojoodi`, `price`, `colorname
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tickets`
+--
+
+CREATE TABLE `tickets` (
+  `tid` int(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `date` datetime NOT NULL,
+  `ischecked` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tickets`
+--
+
+INSERT INTO `tickets` (`tid`, `uid`, `subject`, `message`, `date`, `ischecked`) VALUES
+(1, 1, 'تاخیر در تایید پرداخت', 'با سلام و خدا قوت با توجه به پرداختی که 3 روز پیش انجام دادم ولی هنوز سفارش در وضعیت در حال پرداخت قرار دارد.', '2024-06-19 15:38:14', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -276,15 +308,17 @@ CREATE TABLE `users` (
   `firstname` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) DEFAULT NULL,
   `nationalcode` varchar(10) DEFAULT NULL,
-  `cardnumber` varchar(16) DEFAULT NULL
+  `cardnumber` varchar(16) DEFAULT NULL,
+  `ismodir` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`uid`, `phonenumber`, `password`, `username`, `email`, `firstname`, `lastname`, `nationalcode`, `cardnumber`) VALUES
-(1, '09031538939', '$2b$12$j0KRHPHukd8BEnQjiRTj2.B3EGousufIFRxrc1zPiWAgRxRlwuTWa', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `users` (`uid`, `phonenumber`, `password`, `username`, `email`, `firstname`, `lastname`, `nationalcode`, `cardnumber`, `ismodir`) VALUES
+(1, '09031538939', '$2b$12$j0KRHPHukd8BEnQjiRTj2.B3EGousufIFRxrc1zPiWAgRxRlwuTWa', NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(2, '09131131313', '$2b$12$Na1FHzx8itb9SCKOSjJxQeNQbL/3o/0FmaxqangEW2qO2vm6f7DhC', NULL, NULL, NULL, NULL, NULL, NULL, 0);
 
 --
 -- Indexes for dumped tables
@@ -351,6 +385,12 @@ ALTER TABLE `subproduct`
   ADD PRIMARY KEY (`spid`);
 
 --
+-- Indexes for table `tickets`
+--
+ALTER TABLE `tickets`
+  ADD PRIMARY KEY (`tid`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -365,13 +405,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `addressid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `addressid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -422,10 +462,16 @@ ALTER TABLE `subproduct`
   MODIFY `spid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `tickets`
+--
+ALTER TABLE `tickets`
+  MODIFY `tid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
