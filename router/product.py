@@ -26,7 +26,7 @@ fs = gridfs.GridFS(mgdb)
 
 @router.get("/deletepic/{image_id}")
 async def create_file(image_id:str, current_user: Annotated[UserAuth, Depends(get_current_active_user)],
-                      response:Response, file: UploadFile = File(...)):
+                      response:Response):
     user = get_user_by_phone(current_user.get('sub'))
     uid = user.uid
     user = session.query(User).filter(User.uid == uid).first()
@@ -40,14 +40,13 @@ async def create_file(image_id:str, current_user: Annotated[UserAuth, Depends(ge
         image_id = ObjectId(image_id)
     except Exception as e:
         raise HTTPException(status_code=400, detail="Invalid image ID format")
-    collection = mgdb[""]
-    result = await collection.delete_one({"_id": image_id})
+    collection = mgdb["fs.files"]
+    result = collection.delete_one({"_id": image_id})
 
     if result.deleted_count == 1:
         return {"message": f"Successfully deleted the image with id: {image_id}"}
     else:
         raise HTTPException(status_code=404, detail="Image not found")
-
 
 # Annotated[bytes, File(description="A file read as bytes")]
 @router.post("/addpic")
@@ -234,12 +233,11 @@ def get_mobiles(limit:int,response:Response):
 def get_laptops(limit:int,response:Response):
 
     products = session.query(Product).filter(Product.categoryid == 3).limit(limit).all()
-    if(products is None):
+    if(products is None or len(products)==0):
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"message": "محصولی در این صفحه موجود نیست"}
 
     return products
-
 
 @router.get("/consoles", status_code=status.HTTP_200_OK)
 def get_consoles(limit:int,response:Response):

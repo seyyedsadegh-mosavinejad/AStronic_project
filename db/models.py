@@ -16,8 +16,8 @@ class User(base):
   isModir = Column("ismodir", Boolean, default=False)
   firstname = Column('firstname', String(255), nullable=True)
   lastname = Column('lastname', String(255), nullable=True)
-
   nationalcode = Column('nationalcode', String(10), nullable=True)
+  birthdate = Column('birthdate', String, nullable=True)
   cardnumber = Column('cardnumber', String(16), nullable=True)
 
   sefareshha = relationship("Sefaresh", back_populates="user")
@@ -43,7 +43,7 @@ class Ticket(base):
   subject = Column("subject", String(255))
   date = Column("date", DateTime)
   user = relationship("User", back_populates="tickets")
-
+  isChecked = Column('ischecked', Boolean, default=False)
 
 class Category(base):
   __tablename__ = "categories"
@@ -91,14 +91,14 @@ class Sefaresh(base):
   __tablename__ = "safaresh"
   sid = Column('sid' , Integer,primary_key=True)
   uid = Column('uid' , Integer, ForeignKey("users.uid"))
-  addressid = Column('addressid' , Integer, ForeignKey("addresses.addressid"))
+  address = Column('address' , Text)
   raveshErsalid = Column('raveshersalid' , Integer, ForeignKey("raveshersals.raveshersalid"))
   statusid = Column('statusid' , Integer, ForeignKey("statuses.statusid"))
   date = Column('date' , Date)
   mablaq = Column('mablaq' , String(20))
 
   user = relationship("User", back_populates="sefareshha")
-  address = relationship("Address", back_populates="sefareshha")
+  # address = relationship("Address", back_populates="sefareshha")
   raveshErsal = relationship("Raveshersal", back_populates="sefareshha")
   status = relationship("Status", back_populates="sefareshha")
   rows = relationship("SefareshRow", back_populates="sefaresh")
@@ -152,7 +152,7 @@ class Address(base):
   location = Column('location', Text)
   uid = Column('uid', Integer, ForeignKey('users.uid'))
 
-  sefareshha = relationship("Sefaresh", back_populates="address")
+  # sefareshha = relationship("Sefaresh", back_populates="address")
   user = relationship("User", back_populates="addresses")
 #
 # class Customer(base):

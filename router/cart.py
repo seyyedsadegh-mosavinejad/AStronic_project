@@ -57,9 +57,9 @@ async def add_product(atc: AddToCart,response:Response,
             "message": "محصول مورد نظر به سبد خرید اضافه شد"
         }
     if product.mojoodi < atc.tedad + cart.tedad:
-        response.status_code = status.HTTP_400_BAD_REQUEST
+        response.status_code = status.HTTP_200_OK
         return {
-            "message": "موجودی محصول کمتر از تعداد وارد شده است"
+            "error": "موجودی محصول کمتر از تعداد وارد شده است"
         }
     cart.tedad += atc.tedad
     session.commit()
@@ -138,6 +138,7 @@ async def get_product(response:Response,
         mycart.append(d)
 
     return mycart
+
 
 @router.get("/get2")
 async def get2_product(response:Response,
