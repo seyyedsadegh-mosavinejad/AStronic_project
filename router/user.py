@@ -142,15 +142,16 @@ async def customer_login(userbase: UserLoginBase, response: Response):
 
 
     user = session.query(User).filter(User.phonenumber==userbase.phonenumber).first()
+
     if user is None:
-        response.status_code = status.HTTP_404_NOT_FOUND
+        response.status_code = status.HTTP_200_OK
         return {
-            "message": "شماره همراه نا معتبر است"
+            "error": "شماره همراه نا معتبر است"
         }
     if not Hash.verify(user.password,userbase.password):
-        response.status_code = status.HTTP_404_NOT_FOUND
+        response.status_code = status.HTTP_200_OK
         return {
-            "message": "رمز عبور نا معتبر است"
+            "error": "رمز عبور نا معتبر است"
         }
 
     # access_token = oauth2.create_access_token(data={'sub': user.phonenumber})

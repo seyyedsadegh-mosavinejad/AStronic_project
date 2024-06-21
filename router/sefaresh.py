@@ -63,11 +63,11 @@ async def sabt_sefaresh(addressid: int, raveshersalid: int, current_user: Annota
     address = session.query(Address).filter(Address.addressid == addressid).first()
     if not address:
         return {
-            "message": "آدرس مورد نظر یافت نشد"
+            "error": "آدرس مورد نظر یافت نشد"
         }
     if address.uid != uid:
         return {
-            "message": "آدرس مورد نظر یافت نشد"
+            "error": "آدرس مورد نظر یافت نشد"
         }
     raveshersal = session.query(Raveshersal).filter(Raveshersal.raveshersalid == raveshersalid).first()
     if not raveshersal:
@@ -78,16 +78,20 @@ async def sabt_sefaresh(addressid: int, raveshersalid: int, current_user: Annota
     carts = session.query(Cart).filter(Cart.uid == uid).all()
     if not carts or len(carts) == 0:
         return {
-            "message": "سبد خرید شما خالی است"
+            "error": "سبد خرید شما خالی است"
         }
 
     mablaq = 0
     for cart in carts:
         sp = session.query(SubProduct).filter(SubProduct.spid == cart.spid).first()
         mablaq += cart.tedad * sp.price
+
+    addressStr = (address.ostan + " " +address.shahr + " " + address.address + " کد پستی :"
+                  + address.postalcode + " پلاک: " + address.pelak + "تلفن: " + address.phone)
+
     sefaresh = Sefaresh(
         uid=uid,
-        addressid=addressid,
+        address=addressStr,
         raveshErsalid=raveshersalid,
         statusid=2,
         date=datetime.date.today(),
@@ -114,7 +118,7 @@ async def sabt_sefaresh(addressid: int, raveshersalid: int, current_user: Annota
 
 
     return {
-        "message": f"سفارش شما با کد {sefaresh.sid} با موفقیت ثبت شد. ودر وضعیت منتظر پرداخت قرار دارد "
+        "message": sefaresh.sid
     }
 
 
@@ -159,6 +163,72 @@ async def get_mysefareshha(status:int, response: Response, current_user: Annotat
         data.append(d)
 
     return data
+
+@router.get("/sefareshrows/{sid}")
+async def get_sefareshrows(sid:int, response: Response, current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
+    user = get_user_by_phone(current_user.get('sub'))
+    uid = user.uid
+
+    sefaresh = session.query(Sefaresh).filter(Sefaresh.sid == sid).first()
+    if sefaresh is None or sefaresh.uid != uid:
+        return {
+            "error": "سفارش مورد نظر یافت نشد"
+        }
+
+    rows = session.query(SefareshRow).filter(SefareshRow.sid == sefaresh.sid).all()
+
+    data = []
+    collection = mgdb["fs.files"]
+    for row in rows:
+        d = {}
+
+        query = {"pid": row.subProduct.pid}
+        documents = collection.find(query)
+
+        images = []
+        for document in documents:
+            images.append(document)
+
+        image_object_list = []
+
+        for image in images:
+            image_object_list.append(image.get("_id"))
+
+        pattern = r"'(.*?)'"
+        image_id_list = re.findall(pattern, image_object_list.__str__())
+
+        d["image"] = image_id_list[0]
+        d["tedad"] = row.tedad
+        d["price"] = row.price
+        d["total_price"] = row.totalPrice
+        d["title"] = row.subProduct.product.title
+        d["color"] = row.subProduct.color
+        d["color_name"] = row.subProduct.color_name
+        data.append(d)
+
+    return data
+
+@router.get("/sid")
+async def get_mysefareshha(sid:int, response: Response, current_user: Annotated[UserAuth, Depends(get_current_active_user)]):
+    user = get_user_by_phone(current_user.get('sub'))
+    uid = user.uid
+
+    sefaresh = session.query(Sefaresh).filter(Sefaresh.sid == sid).first()
+    if sefaresh is None or sefaresh.uid != uid:
+        return {
+            "error": "سفارش مورد نظر یافت نشد"
+        }
+
+    d = {}
+    d["sid"] = sefaresh.sid
+    d["name"] = sefaresh.user.firstname + " " + sefaresh.user.lastname
+    d["date"] = sefaresh.date
+    d["mablaq"] = sefaresh.mablaq
+    d["address"] = sefaresh.address
+    d["ravesh_ersal"] = sefaresh.raveshErsal.raveshersal
+
+
+    return d
 
 
 

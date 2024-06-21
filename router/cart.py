@@ -44,7 +44,7 @@ async def add_product(atc: AddToCart,response:Response,
     if not cart:
         if product.mojoodi < atc.tedad:
             return {
-                "message": "موجودی محصول کمتر از تعداد وارد شده است"
+                "error": "موجودی محصول کمتر از تعداد وارد شده است"
             }
         cart = Cart(
             uid=uid,
@@ -163,6 +163,7 @@ async def get2_product(response:Response,
         d["guarantee"] = cart.subProduct.product.guarantee
         d["color"] = cart.subProduct.color
         d["colorName"] = cart.subProduct.color_name
+        d["pid"] = cart.subProduct.product.pid
         mycart.append(d)
 
     return mycart

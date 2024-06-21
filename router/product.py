@@ -219,33 +219,40 @@ def getcheapproducts(gid: int,limit :Optional[int] = 8):
     return products
 
 @router.get("/mobiles", status_code=status.HTTP_200_OK)
-def get_mobiles(limit:int,response:Response):
+async def get_mobiles(limit:int,response:Response):
 
     products = session.query(Product).filter(Product.categoryid == 1).limit(limit).all()
     if(products is None):
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"message": "محصولی در این صفحه موجود نیست"}
 
+    for product in products:
+        p = product.__dict__.pop("information")
+
     return products
 
 
 @router.get("/laptops", status_code=status.HTTP_200_OK)
-def get_laptops(limit:int,response:Response):
+async def get_laptops(limit:int,response:Response):
 
     products = session.query(Product).filter(Product.categoryid == 3).limit(limit).all()
     if(products is None or len(products)==0):
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"message": "محصولی در این صفحه موجود نیست"}
+    for product in products:
+        p = product.__dict__.pop("information")
 
     return products
 
 @router.get("/consoles", status_code=status.HTTP_200_OK)
-def get_consoles(limit:int,response:Response):
+async def get_consoles(limit:int,response:Response):
 
-    products = session.query(Product).filter(Product.categoryid == 11).limit(limit).all()
+    products = session.query(Product).filter(Product.categoryid == 5).limit(limit).all()
     if(products is None):
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"message": "محصولی در این صفحه موجود نیست"}
+    for product in products:
+        p = product.__dict__.pop("information")
 
     return products
 

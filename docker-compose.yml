@@ -64,14 +64,16 @@ services:
     hostname: redis
 #  api_service:
 #    build: ./
-#    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+#    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8002
 #    volumes:
 #      - ./:/app/
 #    depends_on:
 #      - db
 #      - redis
+#      - mongodb
+#      - traefik
 #    ports:
-#      - "10000:8000"
+#      - "8002:8002"
 #    labels:
 #      - "traefik.enable=true"
 #      - "traefik.http.routers.api_service.rule=Host(`localhost`)"
